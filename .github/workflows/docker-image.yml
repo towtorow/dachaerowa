@@ -45,7 +45,11 @@ jobs:
         run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/dachaerowa:latest .
+        run: docker build --build-arg JWT_SECRET_KEY="${{env.JWT_SECRET_KEY}}" \
+          --build-arg DATABASE_URL="${{env.DATABASE_URL}}" \
+          --build-arg DATABASE_USER="${{env.DATABASE_USER}}" \
+          --build-arg DATABASE_PW="${{env.DATABASE_PW}}" \
+          -t ${{ secrets.DOCKER_HUB_USERNAME }}/dachaerowa:latest .
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/dachaerowa:latest
