@@ -42,7 +42,7 @@ jobs:
         run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/dachaerowa:latest .
 
       - name: Run Docker container with environment variables
-        run: docker run -e JWT_SECRET_KEY = ${{ secrets.JWT_SECRET_KEY }} -e DATABASE_URL = ${{ secrets.DATABASE_URL }} -e DATABASE_USER = ${{ secrets.DATABASE_USER }} -e DATABASE_PW = ${{ secrets.DATABASE_PW }} -d --name dachaerowa ${{ secrets.DOCKER_HUB_USERNAME }}/dachaerowa:latest
+        run: docker run -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e DATABASE_USER=${{ secrets.DATABASE_USER }} -e DATABASE_PW=${{ secrets.DATABASE_PW }} -d --name dachaerowa ${{ secrets.DOCKER_HUB_USERNAME }}/dachaerowa:latest
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/dachaerowa:latest
