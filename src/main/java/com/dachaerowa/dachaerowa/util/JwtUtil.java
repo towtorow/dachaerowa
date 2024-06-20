@@ -13,7 +13,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
     @Value("${jwt.secret.key}")
-    private String secret; // TODO 숨김 처리 필요
+    private String secret;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

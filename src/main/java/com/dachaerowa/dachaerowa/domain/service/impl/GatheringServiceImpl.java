@@ -7,6 +7,7 @@ import com.dachaerowa.dachaerowa.domain.repository.GatheringDetailRepository;
 import com.dachaerowa.dachaerowa.domain.repository.GatheringRepository;
 import com.dachaerowa.dachaerowa.domain.service.GatheringService;
 import com.dachaerowa.dachaerowa.internal.api.request.GatheringRequest;
+import com.dachaerowa.dachaerowa.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,20 +25,14 @@ import java.util.List;
 import java.util.Objects;
 @Service
 public class GatheringServiceImpl implements GatheringService {
-    private final Path root = Paths.get("uploads");
     @Autowired
     private GatheringRepository gatheringRepository;
     @Autowired
     private GatheringDetailRepository gatheringDetailRepository;
+    private final S3Service s3Service;
 
-    public GatheringServiceImpl() {
-        try {
-            if (!Files.exists(root)) {
-                Files.createDirectory(root);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Could not initialize folder for upload!");
-        }
+    public GatheringServiceImpl(S3Service s3Service) {
+        this.s3Service = s3Service;
     }
 
     @Override
@@ -57,10 +53,11 @@ public class GatheringServiceImpl implements GatheringService {
         if(Objects.nonNull(request.getImages()) && !request.getImages().isEmpty()){
             for (MultipartFile file : request.getImages()) {
                 try {
-                    if(Objects.nonNull(file.getOriginalFilename())){
-                        Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
-                        imageUrls.add(file.getOriginalFilename());
-                    }
+
+                    File convertedFile = CommonUtil.convertMultiPartToFile(file);
+                    String fileUrl = s3Service.uploadFile("dachaerowa-bucket", file.getOriginalFilename(), convertedFile);
+                    imageUrls.add(fileUrl);
+
                 } catch (Exception e) {
                     throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
                 }

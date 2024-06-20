@@ -46,6 +46,9 @@ jobs:
             --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
             --build-arg DATABASE_USER="${{ secrets.DATABASE_USER }}" \
             --build-arg DATABASE_PW="${{ secrets.DATABASE_PW }}" \
+            --build-arg AWS_S3_ACCESS_KEY="${{ secrets.AWS_S3_ACCESS_KEY }}" \
+            --build-arg AWS_S3_SECRET_KEY="${{ secrets.AWS_S3_SECRET_KEY }}" \
+            --build-arg AWS_REGION="${{ secrets.AWS_REGION }}" \
             -t ${{ secrets.DOCKER_HUB_USERNAME }}/dachaerowa:latest .
 
       - name: Push Docker image to Docker Hub
