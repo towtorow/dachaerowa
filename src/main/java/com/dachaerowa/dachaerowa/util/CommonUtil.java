@@ -1,10 +1,9 @@
 package com.dachaerowa.dachaerowa.util;
 
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -19,11 +18,23 @@ public class CommonUtil {
         if(Objects.nonNull(file.getOriginalFilename())){
             File convFile = new File(file.getOriginalFilename());
             FileOutputStream fos = new FileOutputStream(convFile);
-            fos.write(file.getBytes());
+            fos.write(compressImage(file, 800, 600, 0.75f));
             fos.close();
             return convFile;
         }
         return null;
+    }
+
+    public static byte[] compressImage(MultipartFile imageFile, int width, int height, float quality) throws IOException {
+        try (InputStream inputStream = imageFile.getInputStream();
+             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            // 압축 수행
+            Thumbnails.of(inputStream)
+                    .size(width, height)
+                    .outputQuality(quality)
+                    .toOutputStream(outputStream);
+            return outputStream.toByteArray();
+        }
     }
 
 }
