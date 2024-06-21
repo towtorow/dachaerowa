@@ -1,5 +1,6 @@
 package com.dachaerowa.dachaerowa.internal.api.request;
 
+import com.dachaerowa.dachaerowa.domain.model.User;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,4 +21,6 @@ public class GatheringRequest {
     private LocalDateTime endDateTime;
 
     private String location;
+
+    private User organizer;
 }

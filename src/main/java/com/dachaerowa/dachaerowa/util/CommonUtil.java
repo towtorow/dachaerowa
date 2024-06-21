@@ -1,6 +1,10 @@
 package com.dachaerowa.dachaerowa.util;
 
+import com.dachaerowa.dachaerowa.domain.model.User;
 import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -37,4 +41,9 @@ public class CommonUtil {
         }
     }
 
+    public static String getAuthenticationUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return userDetails.getUsername();
+    }
 }

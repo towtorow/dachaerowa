@@ -71,6 +71,7 @@ public class GatheringServiceImpl implements GatheringService {
         gathering.setStartDateTime(request.getStartDateTime());
         gathering.setEndDateTime(request.getEndDateTime());
         gathering.setLocation(request.getLocation());
+        gathering.setOrganizer(request.getOrganizer());
 
         gathering = gatheringRepository.save(gathering);
 
