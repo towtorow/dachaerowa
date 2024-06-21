@@ -48,7 +48,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
         if (userRepository.findByUsername(signupRequest.getUsername()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("Content-Type", "text/html; charset=utf-8").body("사용자 이름을 사용할 수 없습니다.");
         }
 
         User user = new User();
@@ -59,7 +59,7 @@ public class AuthController {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok("User registered successfully");
+        return ResponseEntity.status(HttpStatus.OK).header("Content-Type", "text/html; charset=utf-8").body("회원 가입 완료");
     }
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -75,8 +75,7 @@ public class AuthController {
             return ResponseEntity.ok(new AuthResponse(jwt));
 
         } catch (Exception e) {
-            logger.info(e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("Content-Type", "application/json").body("Invalid credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("Content-Type", "text/html; charset=utf-8").body("로그인 실패");
         }
     }
 }
