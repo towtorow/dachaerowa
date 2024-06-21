@@ -88,7 +88,7 @@ public class GatheringServiceImpl implements GatheringService {
     @Override
     public Page<Gathering> getGatherings(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        return gatheringRepository.findAll(pageable);
+        return gatheringRepository.findAllWithJoinOrganizerOnly(pageable);
     }
 
 }

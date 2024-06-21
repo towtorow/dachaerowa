@@ -35,12 +35,6 @@ public class Gathering {
     @JoinColumn(name = "organizer_id")
     private User organizer;
 
-    @ManyToMany
-    @JoinTable(
-            name = "gatherings_participants",
-            joinColumns = @JoinColumn(name = "gathering_id"),
-            inverseJoinColumns = @JoinColumn(name = "participant_id")
-    )
-    private Set<User> participants = new HashSet<>();
+    private Set<Long> participants = new HashSet<>();
 
 }
