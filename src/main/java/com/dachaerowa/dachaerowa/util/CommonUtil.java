@@ -32,7 +32,6 @@ public class CommonUtil {
     public static byte[] compressImage(MultipartFile imageFile, int width, int height, float quality) throws IOException {
         try (InputStream inputStream = imageFile.getInputStream();
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            // 압축 수행
             Thumbnails.of(inputStream)
                     .size(width, height)
                     .outputQuality(quality)

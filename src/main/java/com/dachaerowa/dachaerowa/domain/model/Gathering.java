@@ -35,6 +35,4 @@ public class Gathering {
     @JoinColumn(name = "organizer_id")
     private User organizer;
 
-    private Set<Long> participants = new HashSet<>();
-
 }

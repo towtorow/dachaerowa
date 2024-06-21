@@ -21,5 +21,4 @@ public class SignupRequest {
     @NotEmpty
     private String email;
 
-    // Getters and Setters
 }

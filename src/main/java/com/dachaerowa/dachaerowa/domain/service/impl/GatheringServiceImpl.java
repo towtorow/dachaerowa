@@ -46,9 +46,7 @@ public class GatheringServiceImpl implements GatheringService {
     }
     @Override
     public Gathering saveGatheringAndDetail(GatheringRequest request) {
-        // TODO Gathering이 이미 있는 경우 Gathering 수정과 GatheringDetail에 이미지 추가하도록 구현
-        
-        // Gathering이 없는 경우
+
         List<String> imageUrls = new ArrayList<>(); 
         if(Objects.nonNull(request.getImages()) && !request.getImages().isEmpty()){
             for (MultipartFile file : request.getImages()) {
@@ -59,7 +57,7 @@ public class GatheringServiceImpl implements GatheringService {
                     imageUrls.add(fileUrl);
 
                 } catch (Exception e) {
-                    throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+                    throw new RuntimeException(e.getMessage());
                 }
             }
         }
