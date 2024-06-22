@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -87,6 +88,12 @@ public class GatheringServiceImpl implements GatheringService {
     public Page<Gathering> getGatherings(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         return gatheringRepository.findAllWithJoinOrganizerOnly(pageable);
+    }
+
+    @Override
+    public Page<Gathering> getGatheringsAfterNow(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return gatheringRepository.findAllWithJoinOrganizerOnlyAfterNow(pageable, LocalDateTime.now());
     }
 
 }

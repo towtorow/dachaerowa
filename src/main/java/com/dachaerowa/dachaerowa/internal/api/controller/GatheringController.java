@@ -55,5 +55,10 @@ public class GatheringController {
         return gatheringService.getGatherings(page, size);
     }
 
+    @GetMapping("/todo/get")
+    public Page<Gathering> getGatheringsAfterNow(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return gatheringService.getGatheringsAfterNow(page, size);
+    }
+
 
 }

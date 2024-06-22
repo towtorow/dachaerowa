@@ -18,5 +18,5 @@ public interface GatheringService {
 
     Page<Gathering> getGatherings(int page, int size);
 
-
+    public Page<Gathering> getGatheringsAfterNow(int page, int size);
 }
