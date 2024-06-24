@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -23,6 +24,8 @@ public interface GatheringRepository extends JpaRepository<Gathering, Long> {
             "LEFT JOIN FETCH g.organizer " +
             "WHERE g.startDateTime > :now " +
             "ORDER BY g.startDateTime ASC")
-    Page<Gathering> findAllWithJoinOrganizerOnlyAfterNow(Pageable pageable, LocalDateTime now);
+    Page<Gathering> findAllWithJoinOrganizerOnlyAfterNow(Pageable pageable, @Param("now") LocalDateTime now);
+
+
 
 }

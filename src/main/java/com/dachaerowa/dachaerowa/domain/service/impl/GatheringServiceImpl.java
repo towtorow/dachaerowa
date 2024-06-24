@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 @Service
 public class GatheringServiceImpl implements GatheringService {
@@ -95,5 +96,7 @@ public class GatheringServiceImpl implements GatheringService {
         Pageable pageable = PageRequest.of(page, size);
         return gatheringRepository.findAllWithJoinOrganizerOnlyAfterNow(pageable, LocalDateTime.now());
     }
+
+
 
 }

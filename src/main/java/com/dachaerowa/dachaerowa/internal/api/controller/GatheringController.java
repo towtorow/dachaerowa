@@ -60,5 +60,4 @@ public class GatheringController {
         return gatheringService.getGatheringsAfterNow(page, size);
     }
 
-
 }
