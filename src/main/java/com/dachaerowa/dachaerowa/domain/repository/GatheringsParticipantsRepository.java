@@ -17,5 +17,5 @@ public interface GatheringsParticipantsRepository extends JpaRepository<Gatherin
 
     List<GatheringsParticipants> findByGatheringId(Long gatheringId);
 
-
+    List<GatheringsParticipants> findByGatheringIdAndParticipantId(Long gatheringId, Long participantId);
 }

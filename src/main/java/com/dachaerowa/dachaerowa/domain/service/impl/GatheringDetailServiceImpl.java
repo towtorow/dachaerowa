@@ -48,7 +48,9 @@ public class GatheringDetailServiceImpl implements GatheringDetailService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetail = (UserDetails) authentication.getPrincipal();
         User user = userRepository.findByUsername(userDetail.getUsername()).orElseThrow();
-        return gatheringsParticipantsRepository.save(GatheringsParticipants.builder().gatheringId((long) gatheringId).participantId(user.getId()).participantUsername(user.getUsername()).build()).getId();
+        List<GatheringsParticipants> gatheringsParticipants = gatheringsParticipantsRepository.findByGatheringIdAndParticipantId((long) gatheringId, user.getId());
+
+        return gatheringsParticipants.isEmpty() ? gatheringsParticipantsRepository.save(GatheringsParticipants.builder().gatheringId((long) gatheringId).participantId(user.getId()).participantUsername(user.getUsername()).build()).getId() : null;
     }
 
 }
