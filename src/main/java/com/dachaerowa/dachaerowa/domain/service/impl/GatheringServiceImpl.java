@@ -7,12 +7,14 @@ import com.dachaerowa.dachaerowa.domain.repository.GatheringDetailRepository;
 import com.dachaerowa.dachaerowa.domain.repository.GatheringRepository;
 import com.dachaerowa.dachaerowa.domain.service.GatheringService;
 import com.dachaerowa.dachaerowa.internal.api.request.GatheringRequest;
+import com.dachaerowa.dachaerowa.internal.api.request.GatheringUpdateRequest;
 import com.dachaerowa.dachaerowa.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -97,6 +99,46 @@ public class GatheringServiceImpl implements GatheringService {
         return gatheringRepository.findAllWithJoinOrganizerOnlyAfterNow(pageable, LocalDateTime.now());
     }
 
+    @Override
+    public Gathering getGathering(Long gatheringId){
+        return gatheringRepository.findById(gatheringId).orElseThrow();
+    }
+    @Transactional
+    public void deleteGathering(Long gatheringId){
+        gatheringRepository.updateDeletedDateById(gatheringId, LocalDateTime.now());
+    }
+    @Transactional
+    public void updateGathering(GatheringUpdateRequest request){
+        gatheringRepository.updateTitleAndDescriptionById(request.getGatheringId(), request.getTitle(), request.getDescription());
+        if (Objects.nonNull(request.getDeleteImageIds()) && !request.getDeleteImageIds().isEmpty()) {
 
+            gatheringDetailRepository.updateDeletedDateById(request.getDeleteImageIdsAsLong(), LocalDateTime.now());
+        }
+
+        List<String> imageUrls = new ArrayList<>();
+        if(Objects.nonNull(request.getImages()) && !request.getImages().isEmpty()){
+            for (MultipartFile file : request.getImages()) {
+                try {
+
+                    File convertedFile = CommonUtil.convertMultiPartToFile(file);
+                    String fileUrl = s3Service.uploadFile("dachaerowa-bucket", file.getOriginalFilename(), convertedFile);
+                    imageUrls.add(fileUrl);
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        }
+
+        List<GatheringDetail> gatheringDetails = new ArrayList<>();
+
+        Long gateringId = request.getGatheringId();
+
+        imageUrls.forEach(item -> gatheringDetails.add(GatheringDetail.builder().gatheringId(gateringId).imageUrl(item).build()));
+
+        gatheringDetailRepository.saveAll(gatheringDetails);
+
+
+    }
 
 }

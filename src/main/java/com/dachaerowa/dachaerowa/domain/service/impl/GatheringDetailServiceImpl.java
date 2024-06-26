@@ -10,12 +10,14 @@ import com.dachaerowa.dachaerowa.domain.repository.GatheringsParticipantsReposit
 import com.dachaerowa.dachaerowa.domain.repository.UserRepository;
 import com.dachaerowa.dachaerowa.domain.service.GatheringDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ public class GatheringDetailServiceImpl implements GatheringDetailService {
     @Override
     public Map<String, Object> getGatheringDetails(int gatheringId){
         Gathering gathering = gatheringRepository.findById((long) gatheringId).orElseThrow();
-        List<GatheringDetail> gatheringDetails = gatheringDetailRepository.findAllByGatheringId(gathering.getId());
+        List<GatheringDetail> gatheringDetails = gatheringDetailRepository.findAllByGatheringIdAndDeletedDateIsNull(gathering.getId());
         return Map.of("gathering", gathering, "gatheringDetails", gatheringDetails);
     }
     @Override
@@ -52,5 +54,8 @@ public class GatheringDetailServiceImpl implements GatheringDetailService {
 
         return gatheringsParticipants.isEmpty() ? gatheringsParticipantsRepository.save(GatheringsParticipants.builder().gatheringId((long) gatheringId).participantId(user.getId()).participantUsername(user.getUsername()).build()).getId() : null;
     }
+
+
+
 
 }
