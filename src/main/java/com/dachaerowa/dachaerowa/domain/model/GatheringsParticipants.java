@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "gatherings_participants")
 @NoArgsConstructor
 @AllArgsConstructor
-public class GatheringsParticipants {
+public class GatheringsParticipants  extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
